@@ -17,49 +17,52 @@
  * along with Graylog2.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.graylog2.ipanonymizerfilter.filter;
+package org.graylog2.filters.ipanonymizer;
+
+import org.graylog2.plugin.Message;
+import org.graylog2.plugin.filters.MessageFilter;
 
 import java.util.Map;
 import java.util.regex.Pattern;
-import org.graylog2.plugin.GraylogServer;
-import org.graylog2.plugin.filters.MessageFilter;
-import org.graylog2.plugin.logmessage.LogMessage;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
- * @author Lennart Koopmann <lennart@socketfeed.com>
+ * A Graylog2 {@link MessageFilter} which anonymizes IPv4 addresses
+ * by replacing the last octet with {@literal xxx}.
  */
 public class IPAnonymizerFilter implements MessageFilter {
+    public static final String NAME = "IPv4 address Anonymizer";
+    private static final String REPLACEMENT = "$1.$2.$3.xxx";
+    private static final Pattern PATTERN = Pattern.compile("(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})");
 
-    public static final String NAME = "IP anonymizer";
-    
-    public static final String REPLACEMENT = "$1.$2.$3.xxx";
-    
-    private static final Pattern p = Pattern.compile("(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})");
-    
-    public boolean filter(LogMessage msg, GraylogServer server) {
-        msg.setShortMessage(anonymize(msg.getShortMessage()));
-        msg.setFullMessage(anonymize(msg.getFullMessage()));
-        
-        for (Map.Entry<String, Object> a : msg.getAdditionalData().entrySet()) {
-            if (a.getValue() instanceof String) {
-                msg.setAdditionalData(a.getKey(), anonymize((String) a.getValue()));
+    @Override
+    public boolean filter(Message msg) {
+        for (Map.Entry<String, Object> a : msg.getFields().entrySet()) {
+            if (a.getValue() instanceof String && !"source".equals(a.getKey())) {
+                msg.addField(a.getKey(), anonymize((String) a.getValue()));
             }
         }
-        
+
         // Never filter out a message.
         return false;
     }
 
+    @Override
+    public int getPriority() {
+        return 0;
+    }
+
+    @Override
     public String getName() {
         return NAME;
     }
-    
+
     private String anonymize(String input) {
-        if (input == null || input.isEmpty()) {
+        if (isNullOrEmpty(input)) {
             return input;
         }
-        
-        return p.matcher(input).replaceAll(REPLACEMENT);
+
+        return PATTERN.matcher(input).replaceAll(REPLACEMENT);
     }
-    
 }
