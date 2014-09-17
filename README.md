@@ -1,5 +1,6 @@
 graylog2-plugin-filter-ipanonymizer
 ===================================
+[![Build Status](https://travis-ci.org/Graylog2/graylog2-plugin-filter-ipanonymizer.svg)](https://travis-ci.org/Graylog2/graylog2-plugin-filter-ipanonymizer)
 
 A graylog-server plugin that replaces the last octet of IP addresses in messages with xxx
 
