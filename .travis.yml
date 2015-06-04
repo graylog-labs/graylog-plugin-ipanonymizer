@@ -2,3 +2,25 @@ language: java
 jdk:
   - oraclejdk7
   - oraclejdk8
+addons:
+  apt:
+    packages:
+      - rpm
+before_deploy:
+  - mvn jdeb:jdeb && export RELEASE_DEB_FILE=$(ls target/*.deb)
+  - mvn rpm:rpm && export RELEASE_RPM_FILE=$(ls target/rpm/graylog2-filter-ipanonymizer/RPMS/noarch/graylog2-filter-ipanonymizer-*.rpm)
+  - export RELEASE_PKG_FILE=$(ls target/graylog2-filter-ipanonymizer-*.jar)
+  - echo "Deploying release to GitHub releases"
+deploy:
+  provider: releases
+  api_key:
+    secure: "hE1AXsW998pPmaHMS6kXv6Ug/3k3kw5VTGAfuOPxYVjOZNt35Y6h8XTaMTgE9jCWOx3V8hLkSOX+Vxi1Bp9hHIrQw1wCW3kbIvYP6JeMqN5CSnUVMk2eTMBGpcuzgqsX0CL+L2Ht2bIl1fqLILC+pCNMriqE+Jgn20xN5kVLMzI="
+  file: 
+    - "${RELEASE_PKG_FILE}"
+    - "${RELEASE_DEB_FILE}"
+    - "${RELEASE_RPM_FILE}"
+  skip_cleanup: true
+  on:
+    tags: true
+    jdk: oraclejdk7
+
