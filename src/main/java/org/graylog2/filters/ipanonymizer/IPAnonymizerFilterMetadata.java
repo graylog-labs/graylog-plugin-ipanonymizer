@@ -22,17 +22,17 @@ public class IPAnonymizerFilterMetadata implements PluginMetaData {
 
     @Override
     public String getAuthor() {
-        return "TORCH GmbH";
+        return "Graylog, Inc.";
     }
 
     @Override
     public URI getURL() {
-        return URI.create("http://www.torch.sh");
+        return URI.create("http://www.graylog.org/");
     }
 
     @Override
     public Version getVersion() {
-        return new Version(1, 0, 0, "rc.1");
+        return new Version(1, 1, 1);
     }
 
     @Override

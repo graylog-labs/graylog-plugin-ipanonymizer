@@ -2,14 +2,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.graylog2</groupId>
-    <artifactId>graylog2-filter-ipanonymizer</artifactId>
-    <version>1.1.0</version>
+    <groupId>org.graylog.plugins</groupId>
+    <artifactId>graylog-plugin-ipanonymizer</artifactId>
+    <version>1.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>graylog2-filter-ipanonymizer</name>
-    <description>Graylog2 IP Anonymizer Filter plugin</description>
-    <url>http://www.graylog2.org</url>
+    <name>${project.artifactId}</name>
+    <description>Graylog IP Anonymizer Filter plugin</description>
+    <url>http://www.graylog.org</url>
+
+    <scm>
+        <connection>scm:git:git@github.com:Graylog2/graylog-plugin-ipanonymizer.git</connection>
+        <developerConnection>scm:git:git@github.com:Graylog2/graylog-plugin-ipanonymizer.git</developerConnection>
+        <url>https://github.com/Graylog2/graylog-plugin-ipanonymizer</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -62,6 +69,19 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <mavenExecutorId>forked-path</mavenExecutorId>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <preparationGoals>clean test</preparationGoals>
+                    <goals>package</goals>
+                </configuration>
             </plugin>
 
             <plugin>
