@@ -5,6 +5,8 @@ IP Address Anonymizer Plugin for Graylog
 
 A Graylog plugin that replaces the last octet of IP addresses in messages with `xxx`.
 
+**Required Graylog version:** 1.0 and later
+
 ## Installation
 
 [Download the plugin](https://github.com/Graylog2/graylog-plugin-ipanonymizer/releases)
